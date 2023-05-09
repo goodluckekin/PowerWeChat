@@ -86,7 +86,8 @@ func (app *Application) GetComponent(name string) interface{} {
 		return app.Auth
 	case "Config":
 		return app.Config
-
+	case "Logger":
+		return app.Logger
 	default:
 		return nil
 	}
