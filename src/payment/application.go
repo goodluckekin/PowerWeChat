@@ -3,6 +3,9 @@ package payment
 import (
 	"errors"
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/ArtisanCloud/PowerLibs/v3/logger"
 	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
@@ -17,14 +20,13 @@ import (
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/order"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/partner"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/profitSharing"
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/promotion"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/redpack"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/refund"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/reverse"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/sandbox"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/security"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/payment/transfer"
-	"net/http"
-	"time"
 )
 
 type Payment struct {
@@ -48,6 +50,8 @@ type Payment struct {
 	ProfitSharing *profitSharing.Client
 
 	Base *base.Client
+
+	Promotion *promotion.Client
 
 	Security *security.Client
 
@@ -144,6 +148,13 @@ func NewPayment(config *UserConfig) (*Payment, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	//-------------- promotion --------------
+	app.Promotion, err = promotion.RegisterProvider(app)
+	if err != nil {
+		return nil, err
+	}
+
 	//-------------- Partner --------------
 	app.Partner, err = partner.RegisterProvider(app)
 	if err != nil {
