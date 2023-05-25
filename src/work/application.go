@@ -33,6 +33,7 @@ import (
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work/externalContact/transfer"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work/groupRobot"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work/invoice"
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/work/jssdk"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work/media"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work/menu"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/work/message"
@@ -132,6 +133,8 @@ type Work struct {
 	GroupRobotMessenger *groupRobot.Messager
 
 	Logger *logger.Logger
+
+	JSSDK *jssdk.Client
 }
 
 type UserConfig struct {
@@ -332,6 +335,12 @@ func NewWork(config *UserConfig) (*Work, error) {
 		return nil, err
 	}
 
+	//-------------- JSSDK --------------
+	app.JSSDK, err = jssdk.RegisterProvider(app)
+	if err != nil {
+		return nil, err
+	}
+
 	return app, err
 }
 
@@ -350,6 +359,8 @@ func (app *Work) GetConfig() *kernel.Config {
 func (app *Work) GetComponent(name string) interface{} {
 
 	switch name {
+	case "JSSDK":
+		return app.JSSDK
 	case "Base":
 		return app.Base
 	case "AccessToken":
