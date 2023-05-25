@@ -10,6 +10,7 @@ import (
 	"github.com/ArtisanCloud/PowerLibs/v3/object"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/basicService/jssdk"
 	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel"
+	"github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/power"
 	response2 "github.com/ArtisanCloud/PowerWeChat/v3/src/kernel/response"
 )
 
@@ -40,6 +41,24 @@ func (comp *Client) GetAppID() string {
 }
 
 func (comp *Client) GetAgentConfigArray() {
+
+}
+
+func (comp *Client) BuildConfig(ctx context.Context, jsApiList []string, debug bool, beta bool, openTagList []string, url string) (interface{}, error) {
+
+	signature, err := comp.ConfigSignature(ctx, url, "", 0)
+	if err != nil {
+		return signature, err
+	}
+	config := object.MergeHashMap(&object.HashMap{
+		"debug":       debug,
+		"beta":        beta,
+		"jsApiList":   jsApiList,
+		"openTagList": openTagList,
+	}, signature)
+
+	powerConfig, err := power.HashMapToPower(config)
+	return powerConfig, err
 
 }
 
