@@ -52,7 +52,7 @@ func (comp *Client) QueryTransferToPocket(ctx context.Context, data *request.Req
 	result := &response.ResponseQueryTransferToPocket{}
 
 	//params, err := object.StructToHashMapWithTag(data,"json")
-	params, err := object.StructToHashMap(data)
+	params, err := object.StructToHashMapWithXML(data)
 	if err != nil {
 		return nil, err
 	}

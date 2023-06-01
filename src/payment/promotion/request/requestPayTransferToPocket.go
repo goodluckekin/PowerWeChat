@@ -1,7 +1,7 @@
 package request
 
 type RequestPayTransferToPocket struct {
-	AppID          string `xml:",appid"`
+	AppID          string `xml:"appid"`
 	MchID          string `xml:"mch_id"`
 	DeviceInfo     string `xml:"device_info"`
 	NonceStr       string `xml:"nonce_str"`
