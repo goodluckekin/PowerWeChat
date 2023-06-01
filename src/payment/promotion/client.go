@@ -3,6 +3,7 @@ package promotion
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/ArtisanCloud/PowerLibs/v3/object"
@@ -33,7 +34,7 @@ func (comp *Client) PayTransferToPocket(ctx context.Context, data *request.Reque
 	result := &response.ResponsePayTransferToPocket{}
 
 	//params, err := object.StructToHashMapWithTag(data, "json")
-	params, err := object.StructToHashMap(data)
+	params, err := object.StructToHashMapWithXML(data)
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +195,7 @@ func (client *Client) AuthSignRequestV2Work(endpoint string, method string, para
 		if err != nil {
 			return nil, err
 		}
-		signBody = object.StringMap2Xml(objPara)
+		signBody = StringMap2XmlWork(objPara)
 	}
 
 	// set body content
@@ -203,4 +204,12 @@ func (client *Client) AuthSignRequestV2Work(endpoint string, method string, para
 	}, options)
 
 	return options, err
+}
+
+func StringMap2XmlWork(obj *object.StringMap) (strXML string) {
+
+	for k, v := range *obj {
+		strXML = strXML + fmt.Sprintf("<%s>%s</%s>", k, v, k)
+	}
+	return "<xml>" + strXML + "</xml>"
 }
